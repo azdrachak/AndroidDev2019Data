@@ -22,7 +22,7 @@ class MainFragment : Fragment() {
             val monsterNames = StringBuilder()
             for (monster in it) {
                 monsterNames
-                    .append(monster.name)
+                    .append(monster.monsterName)
                     .append("\n")
             }
             message.text = monsterNames
