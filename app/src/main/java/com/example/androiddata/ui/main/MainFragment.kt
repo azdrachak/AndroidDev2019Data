@@ -5,32 +5,38 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
-import com.example.androiddata.R
-import kotlinx.android.synthetic.main.main_fragment.*
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.RecyclerView
+import com.example.androiddata.databinding.MainFragmentBinding
 
 class MainFragment : Fragment() {
 
     private lateinit var viewModel: MainViewModel
+    private lateinit var recyclerView: RecyclerView
+
+    private var _binding: MainFragmentBinding? = null
+    private val binding
+        get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
-        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
-        viewModel.monsterData.observe(this, Observer
-        {
-            val monsterNames = StringBuilder()
-            for (monster in it) {
-                monsterNames.append(monster.monsterName)
-                    .append("\n")
-            }
-            message.text = monsterNames
+        _binding = MainFragmentBinding.inflate(inflater, container, false)
+//        recyclerView = binding.recyclerView
+
+        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        viewModel.monsterData.observe(viewLifecycleOwner, {
+            val adapter = MainRecyclerAdapter(requireContext(), it)
+            binding.recyclerView.adapter = adapter
         })
 
-        return inflater.inflate(R.layout.main_fragment, container, false)
+        return binding.root
     }
 
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
+    }
 }
