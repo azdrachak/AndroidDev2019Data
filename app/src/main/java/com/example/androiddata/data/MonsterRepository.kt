@@ -5,7 +5,6 @@ import android.content.Context
 import android.net.ConnectivityManager
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
-import com.example.androiddata.WEB_SERVICE_URL
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.CoroutineScope
