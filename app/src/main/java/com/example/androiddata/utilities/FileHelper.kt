@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package com.example.androiddata.utilities
 
 import android.content.Context

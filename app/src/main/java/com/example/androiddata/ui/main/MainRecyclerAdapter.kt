@@ -4,16 +4,13 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.RatingBar
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.androiddata.R
 import com.example.androiddata.data.Monster
 import com.example.androiddata.databinding.MonsterGridItemBinding
-import kotlinx.android.synthetic.main.monster_grid_item.view.*
 
-class MainRecyclerAdapter(val context: Context, val monsters: List<Monster>) :
+class MainRecyclerAdapter(private val context: Context, private val monsters: List<Monster>) :
     RecyclerView.Adapter<MainRecyclerAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -45,6 +42,10 @@ class MainRecyclerAdapter(val context: Context, val monsters: List<Monster>) :
                 it.contentDescription = monster.monsterName
             }
             ratingBar.rating = monster.scariness.toFloat()
+            Glide.with(context)
+                .load(monster.imageUrl)
+                .fitCenter()
+                .into(monsterImage)
         }
     }
 }

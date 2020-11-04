@@ -6,13 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.RecyclerView
 import com.example.androiddata.databinding.MainFragmentBinding
 
 class MainFragment : Fragment() {
 
     private lateinit var viewModel: MainViewModel
-    private lateinit var recyclerView: RecyclerView
 
     private var _binding: MainFragmentBinding? = null
     private val binding
@@ -30,7 +28,12 @@ class MainFragment : Fragment() {
         viewModel.monsterData.observe(viewLifecycleOwner, {
             val adapter = MainRecyclerAdapter(requireContext(), it)
             binding.recyclerView.adapter = adapter
+            binding.swipeLayout.isRefreshing = false
         })
+
+        binding.swipeLayout.setOnRefreshListener {
+            viewModel.refreshData()
+        }
 
         return binding.root
     }
