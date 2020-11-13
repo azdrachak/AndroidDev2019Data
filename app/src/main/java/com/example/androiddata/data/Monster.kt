@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package com.example.androiddata.data
 
 import com.example.androiddata.IMAGE_BASE_URL

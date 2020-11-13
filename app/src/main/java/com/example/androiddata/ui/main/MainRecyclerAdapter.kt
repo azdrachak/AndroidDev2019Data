@@ -10,8 +10,11 @@ import com.example.androiddata.R
 import com.example.androiddata.data.Monster
 import com.example.androiddata.databinding.MonsterGridItemBinding
 
-class MainRecyclerAdapter(private val context: Context, private val monsters: List<Monster>) :
-    RecyclerView.Adapter<MainRecyclerAdapter.ViewHolder>() {
+class MainRecyclerAdapter(
+    private val context: Context,
+    private val monsters: List<Monster>,
+    private val itemListener: MonsterItemListener
+) : RecyclerView.Adapter<MainRecyclerAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -20,9 +23,6 @@ class MainRecyclerAdapter(private val context: Context, private val monsters: Li
         val nameText = binding.nameText
         val monsterImage = binding.monsterImage
         val ratingBar = binding.ratingBar
-//        val nameText = itemView.findViewById<TextView>(R.id.nameText)
-//        val monsterImage = itemView.findViewById<ImageView>(R.id.monsterImage)
-//        val ratingBar = itemView.findViewById<RatingBar>(R.id.ratingBar)
     }
 
     override fun getItemCount(): Int = monsters.size
@@ -41,11 +41,21 @@ class MainRecyclerAdapter(private val context: Context, private val monsters: Li
                 it.text = monster.monsterName
                 it.contentDescription = monster.monsterName
             }
+
             ratingBar.rating = monster.scariness.toFloat()
+
             Glide.with(context)
                 .load(monster.imageUrl)
                 .fitCenter()
                 .into(monsterImage)
+
+            holder.itemView.setOnClickListener {
+                itemListener.onMonsterItemClick(monster)
+            }
         }
+    }
+
+    interface MonsterItemListener {
+        fun onMonsterItemClick(monster: Monster)
     }
 }
