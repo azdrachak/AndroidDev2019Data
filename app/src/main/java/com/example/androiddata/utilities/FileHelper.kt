@@ -30,5 +30,11 @@ class FileHelper {
             val file = File(app.cacheDir, "monsters.json")
             file.writeText(json ?: "", Charsets.UTF_8)
         }
+
+        fun readTextFile(app: Application): String? {
+            File(app.cacheDir, "monsters.json").let {
+                return if (it.exists()) it.readText() else null
+            }
+        }
     }
 }
