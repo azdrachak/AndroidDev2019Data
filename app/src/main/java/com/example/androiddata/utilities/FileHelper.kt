@@ -27,12 +27,14 @@ class FileHelper {
 
         fun saveTextToFile(app: Application, json: String?) {
 //            val file = File(app.filesDir, "monsters.json")
-            val file = File(app.cacheDir, "monsters.json")
+//            val file = File(app.cacheDir, "monsters.json")
+            val file = File(app.getExternalFilesDir("monsters"), "monsters.json")
             file.writeText(json ?: "", Charsets.UTF_8)
         }
 
         fun readTextFile(app: Application): String? {
-            File(app.cacheDir, "monsters.json").let {
+//            File(app.cacheDir, "monsters.json").let {
+            File(app.getExternalFilesDir("monsters"), "monsters.json").let {
                 return if (it.exists()) it.readText() else null
             }
         }
