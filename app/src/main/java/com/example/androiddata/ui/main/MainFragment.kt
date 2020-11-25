@@ -2,18 +2,20 @@ package com.example.androiddata.ui.main
 
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.androiddata.LOG_TAG
 import com.example.androiddata.R
 import com.example.androiddata.data.Monster
 import com.example.androiddata.databinding.MainFragmentBinding
 import com.example.androiddata.ui.shared.SharedViewModel
+import com.example.androiddata.utilities.PrefsHelper
+import kotlinx.android.synthetic.main.main_fragment.*
 
 class MainFragment : Fragment(), MainRecyclerAdapter.MonsterItemListener {
 
@@ -22,6 +24,8 @@ class MainFragment : Fragment(), MainRecyclerAdapter.MonsterItemListener {
     private val navController by lazy {
         Navigation.findNavController(requireActivity(), R.id.navHost)
     }
+
+    private lateinit var adapter: MainRecyclerAdapter
 
     private var _binding: MainFragmentBinding? = null
     private val binding
@@ -38,9 +42,17 @@ class MainFragment : Fragment(), MainRecyclerAdapter.MonsterItemListener {
             supportActionBar?.setDisplayHomeAsUpEnabled(false)
         }
 
+        setHasOptionsMenu(true)
+
+        val layoutStyle = PrefsHelper.getItemType(requireContext())
+        binding.recyclerView.layoutManager = if (layoutStyle == "grid") GridLayoutManager(
+            requireContext(),
+            2
+        ) else LinearLayoutManager(requireContext())
+
         viewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
         viewModel.monsterData.observe(viewLifecycleOwner, {
-            val adapter = MainRecyclerAdapter(requireContext(), it, this)
+            adapter = MainRecyclerAdapter(requireContext(), it, this)
             binding.recyclerView.adapter = adapter
             binding.swipeLayout.isRefreshing = false
         })
@@ -61,5 +73,26 @@ class MainFragment : Fragment(), MainRecyclerAdapter.MonsterItemListener {
         Log.i(LOG_TAG, "onMonsterItemClick: ${monster.monsterName}")
         viewModel.selectedMonster.value = monster
         navController.navigate(R.id.action_nav_detail)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.options_main, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when (item.itemId) {
+            R.id.action_view_grid -> {
+                PrefsHelper.setItemType(requireContext(), "grid")
+                binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
+            }
+            R.id.action_view_list -> {
+                PrefsHelper.setItemType(requireContext(), "list")
+                binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+            }
+        }
+        binding.recyclerView.adapter = adapter
+        return true
     }
 }

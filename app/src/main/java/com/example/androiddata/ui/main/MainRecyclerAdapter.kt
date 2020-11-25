@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide
 import com.example.androiddata.R
 import com.example.androiddata.data.Monster
 import com.example.androiddata.databinding.MonsterGridItemBinding
+import com.example.androiddata.utilities.PrefsHelper
 
 class MainRecyclerAdapter(
     private val context: Context,
@@ -29,7 +30,12 @@ class MainRecyclerAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val view = inflater.inflate(R.layout.monster_grid_item, parent, false)
+
+        val layoutStyle = PrefsHelper.getItemType(parent.context)
+        val layoutId =
+            if (layoutStyle == "grid") R.layout.monster_grid_item else R.layout.monster_list_item
+
+        val view = inflater.inflate(layoutId, parent, false)
         return ViewHolder(view)
     }
 
