@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
@@ -57,6 +58,11 @@ class MainFragment : Fragment(), MainRecyclerAdapter.MonsterItemListener {
             binding.swipeLayout.isRefreshing = false
         })
 
+        viewModel.activityTitle.observe(
+            viewLifecycleOwner, {
+                requireActivity().title = it
+            })
+
         binding.swipeLayout.setOnRefreshListener {
             viewModel.refreshData()
         }
@@ -90,6 +96,9 @@ class MainFragment : Fragment(), MainRecyclerAdapter.MonsterItemListener {
             R.id.action_view_list -> {
                 PrefsHelper.setItemType(requireContext(), "list")
                 binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+            }
+            R.id.action_settings -> {
+                navController.navigate(R.id.settingsActivity)
             }
         }
         binding.recyclerView.adapter = adapter
